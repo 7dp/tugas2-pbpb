@@ -2,55 +2,77 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>Blank</ion-title>
+        <ion-title>Tugas 2 - Crypto List</ion-title>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
+    <ion-content :fullscreen="false">
       <div id="container">
-        <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+        <ion-button class="init-button" @click="fetchCryptos"
+          >Get Data</ion-button
+        >
+        <div id="header">
+          <div class="header-text">Nama</div>
+          <div class="header-text">Simbol</div>
+          <div class="header-text">Harga USD</div>
+        </div>
+        <ion-list>
+          <ListItem
+            v-for="crypto in cryptos"
+            :key="crypto.id"
+            :crypto="crypto"
+          />
+        </ion-list>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import ListItem from "@/components/ListItem.vue";
+import { Crypto } from "@/data/crypto";
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/vue";
+import { ref } from "vue";
+
+const cryptos = ref<Crypto[]>([]);
+
+const fetchCryptos = async () => {
+  try {
+    const response = await fetch("https://api.coinlore.net/api/tickers/");
+    const json = await response.json();
+    cryptos.value = json.data;
+    console.log("cryptos", JSON.stringify(json, null, 2));
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+  }
+};
 </script>
 
 <style scoped>
 #container {
   text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
 }
-
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+#header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: 1px solid black;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
+.header-text {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
 }
-
-#container a {
-  text-decoration: none;
+.init-button {
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 </style>
