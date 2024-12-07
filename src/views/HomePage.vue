@@ -2,20 +2,15 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>Tugas 2 - Crypto List</ion-title>
+        <ion-title>Tugas 3 MSIM4401</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content :fullscreen="false">
       <div id="container">
-        <ion-button class="init-button" @click="fetchCryptos"
-          >Get Data</ion-button
+        <ion-button class="refresh-button" @click="fetchCryptosData"
+          >Refresh</ion-button
         >
-        <div id="header">
-          <div class="header-text">Nama</div>
-          <div class="header-text">Simbol</div>
-          <div class="header-text">Harga USD</div>
-        </div>
         <ion-list>
           <ListItem
             v-for="crypto in cryptos"
@@ -42,7 +37,7 @@ import { ref } from "vue";
 
 const cryptos = ref<Crypto[]>([]);
 
-const fetchCryptos = async () => {
+const fetchCryptosData = async () => {
   try {
     const response = await fetch("https://api.coinlore.net/api/tickers/");
     const json = await response.json();
@@ -52,6 +47,8 @@ const fetchCryptos = async () => {
     console.error("Error fetching posts:", error);
   }
 };
+
+fetchCryptosData()
 </script>
 
 <style scoped>
@@ -71,7 +68,7 @@ const fetchCryptos = async () => {
   padding: 10px;
   text-align: center;
 }
-.init-button {
+.refresh-button {
   padding-top: 16px;
   padding-bottom: 16px;
 }
